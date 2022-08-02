@@ -1,0 +1,99 @@
+/*
+MySQL 5.6
+Make a new database
+*/
+
+
+CREATE DATABASE HERTZ;
+
+
+/*Creating a few connected tables*/
+
+CREATE TABLE CUSTOMERS(CUST_ID INT NOT NULL,
+                      NAME VARCHAR(255) NOT NULL,
+                      EMAIL VARCHAR(255) NOT NULL,
+                      PRIMARY KEY(CUST_ID));
+                      
+CREATE TABLE CARS(CAR_ID INT NOT NULL,
+                 CAR_NAME VARCHAR(255),
+                 PRIMARY KEY(CAR_ID));
+
+CREATE TABLE ORDERS(ORD_ID INT NOT NULL,
+                   CUST_ID INT NOT NULL,
+                   CAR_ID INT NOT NULL,
+                   RENT_DATE DATE NOT NULL,
+                   DUE_DATE DATE NOT NULL,
+                   PRIMARY KEY(ORD_ID),
+                   FOREIGN KEY(CUST_ID) REFERENCES CUSTOMERS(CUST_ID),
+                   FOREIGN KEY(CAR_ID) REFERENCES CARS(CAR_ID));
+
+/*Feeding some baseline data*/
+
+INSERT INTO CUSTOMERS VALUES (1, 'John Smith', 24, 'jsmith@gmail.com');
+
+INSERT INTO CUSTOMERS VALUES (2, 'Bojack Horseman', 41, 'bhorse@gmail.com');
+
+INSERT INTO CUSTOMERS VALUES (3, 'Sarah Lynn', 19, 'slynn@gmail.com');
+
+INSERT INTO CUSTOMERS VALUES (4, 'Diane Nguyen', 30, 'bhorse@gmail.com');
+
+INSERT INTO CUSTOMERS VALUES (5, 'Zeus', 500000, '???');
+
+INSERT INTO CARS VALUES (1, 'BMW X5');
+
+INSERT INTO CARS VALUES (2, 'Mercedes S Class');
+
+INSERT INTO CARS VALUES (3, 'BMW X4');
+
+INSERT INTO CARS VALUES (4, 'BMW X3');
+
+INSERT INTO CARS VALUES (5, 'BMW X2');
+
+INSERT INTO CARS VALUES (6, 'BMW X25');
+
+
+/*Simulating some orders*/
+
+INSERT INTO ORDERS VALUES (1, 1, 5, '2008-04-15', '2008-06-15');
+
+INSERT INTO ORDERS VALUES (2, 3, 2, '2008-05-21', '2008-05-31');
+
+INSERT INTO ORDERS VALUES (3, 2, 1, '2008-06-01', '2008-07-15');
+
+
+/*Deleting wrong entry from CUSTOMERS*/
+
+DELETE FROM CUSTOMERS WHERE CUST_ID = 5;
+
+
+/*Some SELECT statements*/
+
+SELECT * FROM CUSTOMERS ORDER BY CUST_ID ASC;
+
+SELECT * FROM CARS ORDER BY CAR_ID ASC;
+
+SELECT * FROM ORDERS ORDER BY ORD_ID ASC;
+
+
+/*Cross table SELECT statements*/
+
+SELECT NAME, CAR_NAME, RENT_DATE, DUE_DATE
+  FROM ORDERS, CUSTOMERS, CARS
+  WHERE ORDERS.CUST_ID = CUSTOMERS.CUST_ID AND ORDERS.CAR_ID = CAR.CAR_ID;
+
+SELECT NAME, CAR_NAME, RENT_DATE, DUE_DATE
+  FROM ORDERS, CUSTOMERS, CARS
+  WHERE ORDERS.CUST_ID = CUSTOMERS.CUST_ID AND ORDERS.CAR_ID = CARS.CAR_ID AND ORDERS.RENT_DATE > '2008-05-15';
+
+
+/*Deleting all tables*/
+
+DROP TABLE ORDERS;
+
+DROP TABLE CARS;
+
+DROP TABLE CUSTOMERS;
+
+
+/*Deleting the database*/
+DROP DATABASE HERTZ;
